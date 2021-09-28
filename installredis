@@ -1,0 +1,24 @@
+#!/bin/bash
+
+apt-get update
+
+cd /tmp
+curl -O http://download.redis.io/redis-stable.tar.gz
+tar xzvf redis-stable.tar.gz
+cd redis-stable
+
+make
+make test
+
+
+mkdir /etc/redis
+cp /tmp/redis-stable/redis.conf /etc/redis
+
+systemctl start redis
+if [[ "$( echo 'ping' | /usr/bin/redis-cli )" == "PONG" ]] ; then
+    echo "ping worked"
+else
+    echo "ping FAILED"
+fi
+
+rm /tmp/redis-stable.tar.gz
