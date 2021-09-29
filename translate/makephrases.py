@@ -1,4 +1,4 @@
-from reddis import WriteDictionary
+from .reddis import WriteDictionary
 import redis
 
 r = redis.Redis(host='localhost', port=6379, db=0)

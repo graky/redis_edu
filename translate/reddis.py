@@ -11,6 +11,6 @@ class GetDictionary:
     @staticmethod
     def get_dictionary(redis_, phrase, lang=None):
         if lang:
-            return redis_.hget(phrase, lang)
+            return redis_.hget(phrase, lang).decode("utf-8")
         return redis_.hgetall(phrase)
 
