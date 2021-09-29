@@ -35,8 +35,6 @@ jobs:
     needs: build
     steps:
       - name: setup redis
-        run: |
-          cd /var/www/redis_edu
-          bash installredis
+        run: sh ./installredis.sh
       
      
