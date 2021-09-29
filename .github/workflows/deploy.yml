@@ -58,5 +58,5 @@ jobs:
           python-version: 3.8
       - name: execute py script
         run: |
-               python translate/makephrases.py
+               python manage.py makephrases
 
