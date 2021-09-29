@@ -29,3 +29,15 @@ jobs:
         PORT: ${{ secrets.PORT }}
         KEY: ${{ secrets.SSHKEY }}
         script: ls
+  
+  
+  redis_install:
+     runs-on: ubuntu-latest
+     steps:
+     - name: go to directory
+       run: cd /var/www/redis_edu 
+     - name: install redis
+       run: bash installredis
+ 
+      
+     
