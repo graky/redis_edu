@@ -1,7 +1,6 @@
 name: Deploy
 
 on: [push]
-permissions: write-all
 jobs:
   build:
 
@@ -37,15 +36,7 @@ jobs:
     steps:
       - name: setup redis
         run: |
-          apt update
-          apt upgrade
-          apt install redis-server
-          if [[ "$( echo 'ping' | /usr/bin/redis-cli )" == "PONG" ]] ; then
-              echo "ping worked"
-          else
-              echo "ping FAILED"
-          fi
-          systemctl status redis
-          systemctl status redis-server
+          cd /var/www/redis_edu
+          bash installredis
       
      
