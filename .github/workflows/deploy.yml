@@ -44,4 +44,13 @@ jobs:
           fi
           systemctl status redis
           systemctl status redis-server
-          exit 0
+
+  create_dictionary:
+
+    runs-on: ubuntu-latest
+    needs: redis_install
+    steps:
+      - name: create_dictionary
+        run: |
+          python3.9 /var/www/redis_edu/translate/makephrases.py
+

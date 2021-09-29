@@ -12,3 +12,11 @@ def welcome_view(request):
     lang = get_language_from_request(request, check_path=True)
     output = GetDictionary.get_dictionary(r, output, lang=lang)
     return HttpResponse(output)
+
+
+def your_lang(request):
+    output = "It's seems like your language is "
+    lang = get_language_from_request(request, check_path=True)
+    output = GetDictionary.get_dictionary(r, output, lang=lang)
+    output += lang
+    return HttpResponse(output)

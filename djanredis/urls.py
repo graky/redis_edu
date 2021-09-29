@@ -15,8 +15,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from traslate import views
+from translate import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.welcome_view, name="welcome"),
+    path('yourlang/', views.your_lang, name="your lang"),
 ]
