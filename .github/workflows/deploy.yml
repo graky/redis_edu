@@ -51,6 +51,7 @@ jobs:
     needs: redis_install
     steps:
       - name: create_dictionary
+        uses: actions/setup-python@v2
         with:
           python-version: 3.8
         run: |
