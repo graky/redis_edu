@@ -54,5 +54,5 @@ jobs:
         with:
           python-version: 3.8
         run: |
-          python3.9 /var/www/redis_edu/translate/makephrases.py
+          python translate/makephrases.py
 
