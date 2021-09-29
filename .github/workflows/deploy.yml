@@ -52,7 +52,7 @@ jobs:
     steps:
       - name: restart gunicorne
         run: |
-          sudo systemctl restart gunicorn
+          scripts/reload_gunicorne.sh
         shell: bash
   create_dictionary:
 
