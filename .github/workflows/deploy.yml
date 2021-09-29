@@ -29,7 +29,9 @@ jobs:
         PORT: ${{ secrets.PORT }}
         KEY: ${{ secrets.SSHKEY }}
         script: ls
-        
+    
+    - name: go to root
+      run: cd /  
     - name: go to directory
       run: cd /var/www/redis_edu 
     - name: install redis
