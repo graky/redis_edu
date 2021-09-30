@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    command: gunicorn translate.wsgi:application --bind 0.0.0.0:8000
+    expose:
+        - 8000:8000
+
+  redis:
+    image: "redis:alpine"
+
+  nginx:
+    build: ./nginx
+    volumes:
+      - static_volume:/var/cache/djanredis/staticfiles
+    ports:
+      - 1337:80
+    depends_on:
+      - web
+
+volumes:
+  static_volume:
