@@ -19,14 +19,14 @@ jobs:
     steps:
       - name: Checkout 🛎
         uses: actions/checkout@master
-
-      - name: Install SSH key
-        run: |
-          mkdir -p ~/.ssh/
-          echo -e 'Host *\n\tStrictHostKeyChecking no\n\n' > ~/.ssh/config
-          echo "${{ secrets.SSHKEY }}" > ~/.ssh/id_rsa
-          chmod 400 ~/.ssh/id_rsa
+        
       - name: Deploy 🚀
-        run: docker-compose up -d --build
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          USERNAME: ${{ secrets.USERNAME }}
+          PORT: ${{ secrets.PORT }}
+          KEY: ${{ secrets.SSHKEY }}
+          script: docker-compose up -d --build
         env:
           DOCKER_HOST: ssh://${{ secrets.USER }}@${{ secrets.HOST }}
