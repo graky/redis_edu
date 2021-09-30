@@ -1,72 +1,32 @@
-name: Deploy
+name: deploy
 
-on: [push]
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
 jobs:
-  build:
+  ci:
+    runs-on: ${{ matrix.os }}
 
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-18.04]
 
     steps:
-    - uses: actions/checkout@v1
+      - name: Checkout 🛎
+        uses: actions/checkout@master
 
-    - name: Copy repository contents via scp
-      uses: appleboy/scp-action@master
-      env:
-        HOST: ${{ secrets.HOST }}
-        USERNAME: ${{ secrets.USERNAME }}
-        PORT: ${{ secrets.PORT }}
-        KEY: ${{ secrets.SSHKEY }}
-      with:
-        source: "."
-        target: "/var/www/redis_edu"
-
-    - name: Executing remote command
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.HOST }}
-        USERNAME: ${{ secrets.USERNAME }}
-        PORT: ${{ secrets.PORT }}
-        KEY: ${{ secrets.SSHKEY }}
-        script: ls
-    
-  redis_install:
-
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: setup redis
+      - name: Install SSH key
         run: |
-          sudo apt install redis-server
-          if [[ "$( echo 'ping' | /usr/bin/redis-cli )" == "PONG" ]] ; then
-              echo "ping worked"
-          else
-              echo "ping FAILED"
-          fi
-          systemctl status redis
-          systemctl status redis-server
-
-  restart_gunicorne:
-
-    runs-on: ubuntu-latest
-    needs: redis_install
-    steps:
-      - name: restart gunicorne
-        run: |
-          scripts/reload_gunicorne.sh
-        shell: bash
-  create_dictionary:
-
-    runs-on: ubuntu-latest
-    needs: restart_gunicorne
-    steps:
-      - name: checkout repo content
-        uses: actions/checkout@v2
-      - name: setup python
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.8
-      - run: pip install -r requirements.txt
-      - name: execute py script
-        run: |
-               python manage.py makephrases
-
+          mkdir -p ~/.ssh/
+          echo -e 'Host *\n\tStrictHostKeyChecking no\n\n' > ~/.ssh/config
+          echo "${{ secrets.SSHKEY }}" > ~/.ssh/id_rsa
+          chmod 400 ~/.ssh/id_rsa
+      - name: Deploy 🚀
+        run: docker-compose up -d --build
+        env:
+          DOCKER_HOST: ssh://${{ secrets.USER }}@${{ secrets.HOST }}
